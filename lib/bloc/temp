@@ -1,0 +1,64 @@
+import 'dart:async';
+import 'package:bloc/bloc.dart';
+import 'package:http/http.dart' as http;
+import 'package:meta/meta.dart';
+import 'dart:convert';
+
+// Events
+abstract class AnimeEvent {}
+
+class GenerateAnimeImage extends AnimeEvent {
+  final String prompt;
+
+  GenerateAnimeImage(this.prompt);
+}
+
+// States
+abstract class AnimeState {}
+
+class AnimeInitialState extends AnimeState {}
+
+class AnimeLoadingState extends AnimeState {}
+
+class AnimeLoadedState extends AnimeState {
+  final dynamic data;
+
+  AnimeLoadedState(this.data);
+}
+
+class AnimeErrorState extends AnimeState {
+  final String errorMessage;
+
+  AnimeErrorState(this.errorMessage);
+}
+
+// Bloc
+class AnimeBloc extends Bloc<AnimeEvent, AnimeState> {
+  AnimeBloc() : super(AnimeInitialState());
+
+  @override
+  Stream<AnimeState> mapEventToState(AnimeEvent event) async* {
+    if (event is GenerateAnimeImage) {
+      yield AnimeLoadingState();
+      try {
+        final response = await http.post(
+          Uri.parse('https://animimagine-ai.p.rapidapi.com/generateImage'),
+          headers: {
+            'content-type': 'application/json',
+            'X-RapidAPI-Key': '676ba820e3mshd41517a1ea902bap10b888jsnb345061c02ab',
+            'X-RapidAPI-Host': 'animimagine-ai.p.rapidapi.com',
+          },
+          body: json.encode({
+            'selected_model_id': 'anything-v5',
+            'selected_model_bsize': '512',
+            'prompt': event.prompt,
+          }),
+        );
+        final data = json.decode(response.body);
+        yield AnimeLoadedState(data);
+      } catch (e) {
+        yield AnimeErrorState('Failed to fetch anime image: $e');
+      }
+    }
+  }
+}
