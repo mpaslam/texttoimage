@@ -9,7 +9,7 @@ class ImagineApi {
   ApiClient apiClient = ApiClient();
 
   Future<Model> getTranslate(String text) async {
-    String trendingpath = 'https://animimagine-ai.p.rapidapi.com/generateImage';
+    String trendingpath = 'api key';
     var body = {
       "selected_model_id": "anything-v5",
       "selected_model_bsize": "512",

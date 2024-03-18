@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:http/http.dart';
 
 import 'api_exception.dart';
@@ -18,12 +19,7 @@ class ApiClient {
       case "POST":
         response = await post(Uri.parse(url),
             headers: {
-              'content-Type': 'application/json',
-              'X-RapidAPI-Key':
-              '676ba820e3mshd41517a1ea902bap10b888jsnb345061c02ab',
-              'X-RapidAPI-Host':'animimagine-ai.p.rapidapi.com',
-
-                  
+              'content-Type': 'your api header',
             },
             body: body);
 
@@ -55,13 +51,7 @@ class ApiClient {
       case "GET":
         response = await get(
           Uri.parse(url),
-          headers: {
-            // 'X-RapidAPI-Key':
-            //     '676ba820e3mshd41517a1ea902bap10b888jsnb345061c02ab',
-            // 'X-RapidAPI-Host': 'animimagine-ai.p.rapidapi.com',
-            // 'Accept': 'application/json',
-            // 'Content-Type': 'application/json'
-          },
+          headers: {},
         );
 
         break;
